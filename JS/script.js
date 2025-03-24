@@ -1,141 +1,164 @@
 // alert("Bonjour !");
-// On va afficher l'image cliquée dans la div de la page gallery_single.html
+
+//############################# Link de la page courante ##################
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("DOM fully loaded and parsed");
+  // Sélectionne tous les liens de navigation
+  const navLinks = document.querySelectorAll(".nav-link");
 
-    // On sélectionner toutes les images de la galerie
-    let images = document.querySelectorAll(".gallery-image img");
-    console.log("Images found:", images);
+  // Récupère le chemin actuel de la page (sans le domaine)
+  const currentPath = window.location.pathname;
 
-    // On ajouter un événement click à chaque image
-    images.forEach(image => {
-        image.addEventListener("click", function () {
-            console.log("Image clicked:", image.src);
-            // On stocke l'URL de l'image cliquée dans le localStorage
-            localStorage.setItem("clickedImage", image.src);
-            // On rediriger vers la page gallery_single_post.html
-            window.location.href = "gallery_single_post.html";
-        });
-    });
-
-    // On récupérer l'URL de l'image cliquée depuis le localStorage
-    let clickedImage = localStorage.getItem("clickedImage");
-    if (clickedImage) {
-        // Affichage de l'image dans la div
-        let imageContainer = document.getElementById("image-container");
-        let imgElement = document.createElement("img");
-        imgElement.src = clickedImage;
-        imgElement.classList.add("img-fluid");
-        imageContainer.appendChild(imgElement);
+  // Vérifie si le chemin de chaque lien correspond au chemin actuel
+  navLinks.forEach((link) => {
+    const linkPath = new URL(link.href).pathname;
+    if (linkPath === currentPath) {
+      // Applique une classe pour styliser le lien actif
+      link.classList.add("active-link");
     }
+  });
 });
+
+// On affiche la page gallery_single_post.html quand on clique sur le bouton
+document.addEventListener("DOMContentLoaded", function () {
+  let divAffichage = document.querySelector(".div-affichage");
+  let title = divAffichage.querySelector("h3");
+  let button = divAffichage.querySelector(".affichage-button");
+
+  divAffichage.addEventListener("mouseover", function () {
+    let highlightColor = getComputedStyle(
+      document.documentElement
+    ).getPropertyValue("--highlight-color");
+
+    // on change la couleur du titre
+    title.style.color = highlightColor;
+
+    // on change la couleur du bouton
+    button.style.backgroundColor = highlightColor;
+    button.style.color = "var(--primary-black)";
+
+    // on change la couleur de la bordure
+    divAffichage.style.borderRight = `6px solid ${highlightColor}`;
+    divAffichage.style.borderBottom = `6px solid ${highlightColor}`;
+  });
+
+  divAffichage.addEventListener("mouseout", function () {
+    // On récupère la couleur de base du titre
+    title.style.color = "";
+
+    // On récupère la couleur de base du bouton
+    button.style.backgroundColor = "";
+    button.style.color = "";
+
+    // on récupère la couleur de base de la bordure
+    divAffichage.style.borderRight = "";
+    divAffichage.style.borderBottom = "";
+  });
+});
+
 // ############################################ ### FORMULAIRE ### ############################################
-// On récupére notre formulaire
-let myform = document.querySelector("form");
-// console.log(myform);
-// On recupère les champs du formulaire
+document.addEventListener("DOMContentLoaded", function () {
+  // On récupére notre formulaire
+  let form = document.querySelector("form");
+  //   On récupère les champs du formulaire
+  let nameInput = document.getElementById("name");
+  let emailInput = document.getElementById("email");
+  let phoneInput = document.getElementById("tel");
+  let messageInput = document.getElementById("textarea");
+  let successMessage = document.getElementById("messageValidation");
 
-// le champ name
-let inputName = document.querySelector("#name");
-// console.log(inputName);
+  //########################### Création d'un conteneur pour accueillir TOUTES les divs d'erreur ######################
+  let globalErrorContainer = document.createElement("div");
+  // On l'insère juste au-dessus du champ "Name"
+  nameInput.parentElement.insertBefore(globalErrorContainer, nameInput);
 
-// le champ adresse
-let inputAdresse = document.querySelector("#adresse");
+  // On ajout un ecouteur d'événement sur le formulaire
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
 
-// le champ email
-let inputEmail = document.querySelector("#email");
+    // On vide le conteneur d'erreurs à chaque submit
+    globalErrorContainer.innerHTML = "";
 
-// le champ phone
-let inputTel = document.querySelector("#tel");
+    let isValid = true;
 
-// le champ message
-let inputMessage = document.querySelector("#message");
+    // --------------------------------------------------- Vérification du champ Name -------------------------------
+    let nameValue = nameInput.value.trim();
+    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ\s-]{2,}$/.test(nameValue)) {
+      let errorDiv = document.createElement("div");
+      errorDiv.classList.add(
+        "text-danger",
+        "bg-danger-subtle",
+        "text-center",
+        "p-2",
+        "mt-2"
+      );
+      errorDiv.textContent =
+        "Le nom doit contenir au moins 2 caractères (lettres seulement).";
+      globalErrorContainer.appendChild(errorDiv);
+      isValid = false;
+    }
 
-// le bouton submit
-// let inputSubmit = document.querySelector("#submit");
+    // --------------------------------------------- Vérification de l'email ----------------------------
+    let emailValue = emailInput.value.trim();
+    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailValue)) {
+      let errorDiv = document.createElement("div");
+      errorDiv.classList.add(
+        "text-danger",
+        "bg-danger-subtle",
+        "text-center",
+        "p-2",
+        "mt-2"
+      );
+      errorDiv.textContent = "Veuillez entrer une adresse e-mail valide.";
+      globalErrorContainer.appendChild(errorDiv);
+      isValid = false;
+    }
 
-// ############# On ajoute un ecoûteur d'événement sur le formulaire #############
-// on ajout l'écouteur d'événement
-myForm.addEventListener("submit", function(event){
-event.preventDefault();
+    // ---------------------------------- Vérification du numéro de téléphone --------------
+    let phoneValue = phoneInput.value.trim();
+    //  10 chiffres consécutifs
+    if (!/^\d{10}$/.test(phoneValue)) {
+      let errorDiv = document.createElement("div");
+      errorDiv.classList.add(
+        "text-danger",
+        "bg-danger-subtle",
+        "text-center",
+        "p-2",
+        "mt-2"
+      );
+      errorDiv.textContent =
+        "Le numéro de téléphone doit contenir exactement 10 chiffres.";
+      globalErrorContainer.appendChild(errorDiv);
+      isValid = false;
+    }
 
-// on recupère les valeurs des champs en ajoutant aussi un trim pour enlever les espaces
-// 
-let valueName = inputName.value.trim();
-let valueAdresse = inputAdresse.value.trim();
-let valueEmail = inputEmail.value.trim();
-let valueTel = inputTel.value.trim();
-let valueMessage = inputMessage.value.trim();
+    // ------------------ Vérification du message (textarea) ----------------------
+    let messageValue = messageInput.value.trim();
+    // On veut minimum 20 caractères et pas que des chiffres
+    if (messageValue.length < 15) {
+      let errorDiv = document.createElement("div");
+      errorDiv.classList.add(
+        "text-danger",
+        "bg-danger-subtle",
+        "text-center",
+        "p-2",
+        "mt-2"
+      );
+      errorDiv.textContent =
+        "Le message doit faire au moins 15 caractères et ne pas être composé uniquement de chiffres.";
+      globalErrorContainer.appendChild(errorDiv);
+      isValid = false;
+    }
 
-// On crée un regex pour verifier l'email
-let regexMail = /^[a-z0-9.%+-]+@[a-z0-9.-]+\.[a-z]{2,4}a$/;
-
-// On crée des conditions pour verifier les champs
-        if(valueName === ""){
-            alert("Veuillez renseigner votre nom");
-            return;
-        }
-        if(valueAdresse === ""){
-            alert("Veuillez renseigner votre adresse");
-            return;
-        }
-        if(valueEmail === "" || !regexMail.test(valueEmail)){
-            alert("Veuillez renseigner un email valide");
-            return;
-        }
-        if(valueTel === ""){
-            alert("Veuillez renseigner votre numéro de téléphone");
-            return;
-        }
-        if(valueMessage.length >10  && valueMessage !== ""){
-            alert("Veuillez renseigner votre message");
-        
-        }else{
-            alert("Merci pour votre message !");
-        }
-
-
-
+    // #################  Affichage du message de succès ou erreurs ###################
+    if (!isValid) {
+      // On a déjà inséré les divs d'erreur au-dessus
+      successMessage.classList.add("d-none");
+    } else {
+      // Tout est bon : on cache les erreurs, on affiche le succès
+      globalErrorContainer.innerHTML = "";
+      successMessage.classList.remove("d-none");
+      form.reset();
+    }
+  });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // on va afficher un message d'alerte si le formulaire est soumis
-// document.addEventListener("DOMContentLoaded", function () {
-//     console.log("DOM fully loaded and parsed");
-
-//     // On sélectionner le formulaire
-//     let form = document.querySelector("form");
-//     console.log("Form found:", form);
-
-//     // On ajouter un événement submit au formulaire
-//     form.addEventListener("submit", function (event) {
-//         console.log("Form submitted");
-//         alert("Merci pour votre message !");
-//     });
-// });
-
-
-
-
-
