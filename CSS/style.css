@@ -156,9 +156,12 @@ footer .icones i:hover {
   .gallery-image .col {
     text-align: center;
   }
-  /* Gallery single post */
-.div-affichage{
-    border: 1px solid rgba(192, 192, 192, 0.681);
+   .gallery-image .row {
+    /* 2 colonnes */
+    grid-template-columns: repeat(2, 1fr); 
+    display: grid;
+  /* Espacement entre les colonnes */
+    gap: 1rem; 
   }
   /* On diminue la taille de l'mage */
 #image-container img{

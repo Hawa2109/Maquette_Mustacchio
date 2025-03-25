@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
     button.style.backgroundColor = highlightColor;
     button.style.color = "var(--primary-black)";
 
-    // on change la couleur de la bordure
+    // on ajout un boxshadow
     divAffichage.style.boxShadow = `6px 6px 0px ${highlightColor}`;
   });
 
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
     button.style.backgroundColor = "";
     button.style.color = "";
 
-    // on récupère la couleur de base de la bordure
+    // on récupère la couleur de base du boxshadow
     divAffichage.style.boxShadow= "";
   });
 
