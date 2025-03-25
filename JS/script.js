@@ -16,10 +16,9 @@ document.addEventListener("DOMContentLoaded", function () {
       link.classList.add("active-link");
     }
   });
-});
 
+// #############################################  GALLERY SINGLE POST ###################################################3
 // On affiche la page gallery_single_post.html quand on clique sur le bouton
-document.addEventListener("DOMContentLoaded", function () {
   let divAffichage = document.querySelector(".div-affichage");
   let title = divAffichage.querySelector("h3");
   let button = divAffichage.querySelector(".affichage-button");
@@ -53,10 +52,9 @@ document.addEventListener("DOMContentLoaded", function () {
     divAffichage.style.borderRight = "";
     divAffichage.style.borderBottom = "";
   });
-});
+
 
 // ############################################ ### FORMULAIRE ### ############################################
-document.addEventListener("DOMContentLoaded", function () {
   // On récupére notre formulaire
   let form = document.querySelector("form");
   //   On récupère les champs du formulaire
@@ -66,10 +64,18 @@ document.addEventListener("DOMContentLoaded", function () {
   let messageInput = document.getElementById("textarea");
   let successMessage = document.getElementById("messageValidation");
 
+  // On récupère les labels correspondants
+        let nameLabel = document.querySelector("label[for='name']");
+        let addressLabel = document.querySelector("label[for='text']");
+        let emailLabel = document.querySelector("label[for='email']");
+        let phoneLabel = document.querySelector("label[for='tel']");
+        let messageLabel = document.querySelector("label[for='textarea']");
+
   //########################### Création d'un conteneur pour accueillir TOUTES les divs d'erreur ######################
   let globalErrorContainer = document.createElement("div");
+
   // On l'insère juste au-dessus du champ "Name"
-  nameInput.parentElement.insertBefore(globalErrorContainer, nameInput);
+  nameLabel.parentElement.insertBefore(globalErrorContainer, nameLabel);
 
   // On ajout un ecouteur d'événement sur le formulaire
   form.addEventListener("submit", function (event) {
@@ -77,6 +83,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // On vide le conteneur d'erreurs à chaque submit
     globalErrorContainer.innerHTML = "";
+
+    // On réinitialise les classes des labels
+          nameLabel.classList.remove("d-none");
+          addressLabel.classList.remove("d-none");
+          emailLabel.classList.remove("d-none");
+          phoneLabel.classList.remove("d-none");
+          messageLabel.classList.remove("d-none");
 
     let isValid = true;
 
@@ -89,11 +102,14 @@ document.addEventListener("DOMContentLoaded", function () {
         "bg-danger-subtle",
         "text-center",
         "p-2",
-        "mt-2"
+        "mt-2",
+        "w-75"
       );
       errorDiv.textContent =
-        "Le nom doit contenir au moins 2 caractères (lettres seulement).";
+        "Verifier votre nom.";
       globalErrorContainer.appendChild(errorDiv);
+      nameLabel.classList.remove("d-none");
+      nameLabel.classList.add("label-error");
       isValid = false;
     }
 
@@ -107,10 +123,12 @@ document.addEventListener("DOMContentLoaded", function () {
         "bg-danger-subtle",
         "text-center",
         "p-2",
-        "mt-2"
+        "mt-2",
+        "w-75"
       );
-      errorDiv.textContent = "Veuillez entrer une adresse e-mail valide.";
+      errorDiv.textContent = "Vérifier votre email.";
       globalErrorContainer.appendChild(errorDiv);
+      emailLabel.classList.remove("d-none");
       isValid = false;
     }
 
@@ -124,11 +142,13 @@ document.addEventListener("DOMContentLoaded", function () {
         "bg-danger-subtle",
         "text-center",
         "p-2",
-        "mt-2"
+        "mt-2",
+        "w-75"
       );
       errorDiv.textContent =
-        "Le numéro de téléphone doit contenir exactement 10 chiffres.";
+        "Vérifier votre numero de téléphone.";
       globalErrorContainer.appendChild(errorDiv);
+      phoneLabel.classList.remove("d-none");
       isValid = false;
     }
 
@@ -142,11 +162,13 @@ document.addEventListener("DOMContentLoaded", function () {
         "bg-danger-subtle",
         "text-center",
         "p-2",
-        "mt-2"
+        "mt-2",
+        "w-75"
       );
       errorDiv.textContent =
-        "Le message doit faire au moins 15 caractères et ne pas être composé uniquement de chiffres.";
+        "Vérifier votre message.";
       globalErrorContainer.appendChild(errorDiv);
+      messageLabel.classList.remove("d-none");
       isValid = false;
     }
 
@@ -155,7 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // On a déjà inséré les divs d'erreur au-dessus
       successMessage.classList.add("d-none");
     } else {
-      // Tout est bon : on cache les erreurs, on affiche le succès
+      // On cache les erreurs, on affiche le succès
       globalErrorContainer.innerHTML = "";
       successMessage.classList.remove("d-none");
       form.reset();
