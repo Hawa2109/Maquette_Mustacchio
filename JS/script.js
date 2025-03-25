@@ -79,109 +79,116 @@ document.addEventListener("DOMContentLoaded", function () {
   nameLabel.parentElement.insertBefore(globalErrorContainer, nameLabel);
 
   // On ajout un ecouteur d'événement sur le formulaire
-  form.addEventListener("submit", function (event) {
+form.addEventListener("submit", function (event) {
     event.preventDefault();
 
     // On vide le conteneur d'erreurs à chaque submit
     globalErrorContainer.innerHTML = "";
 
-    // On réinitialise les classes des labels
-          nameLabel.classList.remove("d-none");
-          addressLabel.classList.remove("d-none");
-          emailLabel.classList.remove("d-none");
-          phoneLabel.classList.remove("d-none");
-          messageLabel.classList.remove("d-none");
+    // Réinitialise les classes des labels
+    [nameLabel, emailLabel, phoneLabel, messageLabel].forEach((label) =>
+        label.classList.remove("d-none", "label-error")
+    );
 
     let isValid = true;
 
-    // --------------------------------------------------- Vérification du champ Name -------------------------------
+    // Récupérer les valeurs des champs
     let nameValue = nameInput.value.trim();
-    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ\s-]{2,}$/.test(nameValue)) {
-      let errorDiv = document.createElement("div");
-      errorDiv.classList.add(
-        "text-danger",
-        "bg-danger-subtle",
-        "text-center",
-        "p-2",
-        "mt-2",
-        "w-75"
-      );
-      errorDiv.textContent =
-        "Verifier votre nom.";
-      globalErrorContainer.appendChild(errorDiv);
-      nameLabel.classList.remove("d-none");
-      nameLabel.classList.add("label-error");
-      isValid = false;
-    }
-
-    // --------------------------------------------- Vérification de l'email ----------------------------
     let emailValue = emailInput.value.trim();
-    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(emailValue)) {
-      let errorDiv = document.createElement("div");
-      errorDiv.classList.add(
-        "text-danger",
-        "bg-danger-subtle",
-        "text-center",
-        "p-2",
-        "mt-2",
-        "w-75"
-      );
-      errorDiv.textContent = "Vérifier votre email.";
-      globalErrorContainer.appendChild(errorDiv);
-      emailLabel.classList.remove("d-none");
-      isValid = false;
-    }
-
-    // ---------------------------------- Vérification du numéro de téléphone --------------
     let phoneValue = phoneInput.value.trim();
-    //  10 chiffres consécutifs
-    if (!/^\d{10}$/.test(phoneValue)) {
-      let errorDiv = document.createElement("div");
-      errorDiv.classList.add(
-        "text-danger",
-        "bg-danger-subtle",
-        "text-center",
-        "p-2",
-        "mt-2",
-        "w-75"
-      );
-      errorDiv.textContent =
-        "Vérifier votre numero de téléphone.";
-      globalErrorContainer.appendChild(errorDiv);
-      phoneLabel.classList.remove("d-none");
-      isValid = false;
-    }
-
-    // ------------------ Vérification du message (textarea) ----------------------
     let messageValue = messageInput.value.trim();
-    // On veut minimum 20 caractères et pas que des chiffres
-    if (messageValue.length < 15) {
-      let errorDiv = document.createElement("div");
-      errorDiv.classList.add(
-        "text-danger",
-        "bg-danger-subtle",
-        "text-center",
-        "p-2",
-        "mt-2",
-        "w-75"
-      );
-      errorDiv.textContent =
-        "Vérifier votre message.";
-      globalErrorContainer.appendChild(errorDiv);
-      messageLabel.classList.remove("d-none");
-      isValid = false;
+
+    // Vérifier si tous les champs sont vides
+    if (!nameValue && !emailValue && !phoneValue && !messageValue) {
+        let errorDiv = document.createElement("div");
+        errorDiv.classList.add(
+            "text-danger",
+            "bg-danger-subtle",
+            "text-center",
+            "p-2",
+            "mt-2"
+        );
+        errorDiv.textContent = "Tous les champs sont requis.";
+        globalErrorContainer.appendChild(errorDiv);
+        isValid = false; // Formulaire non valide
+    } else {
+        // Vérifications individuelles des champs seulement si nécessaire
+
+        // Champ "Nom"
+        if (!/^[A-Za-zÀ-ÖØ-öø-ÿ\s-]{2,}$/.test(nameValue)) {
+            let errorDiv = document.createElement("div");
+            errorDiv.classList.add(
+                "text-danger",
+                "bg-danger-subtle",
+                "text-center",
+                "p-2",
+                "mt-2"
+            );
+            errorDiv.textContent = "Vérifier votre nom.";
+            globalErrorContainer.appendChild(errorDiv);
+            nameLabel.classList.add("label-error");
+            isValid = false;
+        }
+
+        // Champ "Email"
+        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailValue)) {
+            let errorDiv = document.createElement("div");
+            errorDiv.classList.add(
+                "text-danger",
+                "bg-danger-subtle",
+                "text-center",
+                "p-2",
+                "mt-2"
+            );
+            errorDiv.textContent = "Vérifier votre email.";
+            globalErrorContainer.appendChild(errorDiv);
+            emailLabel.classList.add("label-error");
+            isValid = false;
+        }
+
+        // Champ "Téléphone"
+        if (!/^\d{10}$/.test(phoneValue)) {
+            let errorDiv = document.createElement("div");
+            errorDiv.classList.add(
+                "text-danger",
+                "bg-danger-subtle",
+                "text-center",
+                "p-2",
+                "mt-2"
+            );
+            errorDiv.textContent = "Vérifier votre numéro de téléphone.";
+            globalErrorContainer.appendChild(errorDiv);
+            phoneLabel.classList.add("label-error");
+            isValid = false;
+        }
+
+        // Champ "Message"
+        if (messageValue.length < 15) {
+            let errorDiv = document.createElement("div");
+            errorDiv.classList.add(
+                "text-danger",
+                "bg-danger-subtle",
+                "text-center",
+                "p-2",
+                "mt-2"
+            );
+            errorDiv.textContent = "Vérifier votre message.";
+            globalErrorContainer.appendChild(errorDiv);
+            messageLabel.classList.add("label-error");
+            isValid = false;
+        }
     }
 
-    // #################  Affichage du message de succès ou erreurs ###################
+    // Affichage du message de succès ou erreurs
     if (!isValid) {
-      // On a déjà inséré les divs d'erreur au-dessus
-      successMessage.classList.add("d-none");
+        successMessage.classList.add("d-none");
     } else {
-      // On cache les erreurs, on affiche le succès
-      globalErrorContainer.innerHTML = "";
-      successMessage.classList.remove("d-none");
-      form.reset();
+        globalErrorContainer.innerHTML = "";
+        successMessage.classList.remove("d-none");
+        form.reset();
     }
-  });
+});
+
+
 });
