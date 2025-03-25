@@ -1,17 +1,18 @@
 // alert("Bonjour !");
+document.addEventListener("DOMContentLoaded", function () {
 
 //############################# Link de la page courante ##################
-document.addEventListener("DOMContentLoaded", function () {
+
   // Sélectionne tous les liens de navigation
-  const navLinks = document.querySelectorAll(".nav-link");
+  let navLinks = document.querySelectorAll(".nav-link");
 
   // Récupère le chemin actuel de la page (sans le domaine)
-  const currentPath = window.location.pathname;
+  let courantPath = window.location.pathname;
 
   // Vérifie si le chemin de chaque lien correspond au chemin actuel
   navLinks.forEach((link) => {
-    const linkPath = new URL(link.href).pathname;
-    if (linkPath === currentPath) {
+    let linkPath = new URL(link.href).pathname;
+    if (linkPath === courantPath) {
       // Applique une classe pour styliser le lien actif
       link.classList.add("active-link");
     }
