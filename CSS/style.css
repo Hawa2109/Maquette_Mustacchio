@@ -112,7 +112,7 @@ footer .icones i {
   padding: 10px;
   border: 2px solid var(--white);
   margin-right: 10px;
-  transition: background-color 0.3s, color 0.3s;
+  /* transition: background-color 0.3s, color 0.3s; */
 }
 
 footer .icones i:hover {
@@ -187,14 +187,12 @@ footer .icones i:hover {
   .banniere h1 {
     font-size: 1.2rem;
     width: 40%;
-    margin: 20px auto;
   }
 
   .banniere .para-first,
   .banniere .para-second {
     font-size: 1rem;
-    width: 45%;
-    margin: 10px auto;
+     width: 45%;
   }
 
   .banniere .ban-button {
