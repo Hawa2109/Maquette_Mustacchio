@@ -37,8 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
     button.style.color = "var(--primary-black)";
 
     // on change la couleur de la bordure
-    divAffichage.style.borderRight = `6px solid ${highlightColor}`;
-    divAffichage.style.borderBottom = `6px solid ${highlightColor}`;
+    divAffichage.style.boxShadow = `6px 6px 0px ${highlightColor}`;
   });
 
   divAffichage.addEventListener("mouseout", function () {
@@ -50,8 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
     button.style.color = "";
 
     // on récupère la couleur de base de la bordure
-    divAffichage.style.borderRight = "";
-    divAffichage.style.borderBottom = "";
+    divAffichage.style.boxShadow= "";
   });
 
 
